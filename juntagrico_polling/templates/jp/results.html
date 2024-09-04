@@ -8,25 +8,19 @@
 {% block content %}
     <table width="100%">
         <tr>
-            <td><strong>ID</strong></td>
-            <td><strong>{% trans "Poll" %}</strong></td>
-            <td><strong>{% trans "Open until" %}</strong></td><td><strong>{% trans "Yes" %}</strong></td>
-            <td><strong>{% trans "No" %}</strong></td><td><strong>{% trans "Abstention" %}</strong></td>
-            <td><strong>{% trans "Total" %}</strong></td>
+            <td><strong>{% trans "Name" %}</strong></td>
+            <td><strong>{% trans "Email" %}</strong></td>
+            <td><strong>{% trans "Vote" %}</strong></td>
         </tr>
 
-        {% for poll in polls %}
+        {% for member, vote in member_votes.items %}
         <tr>
-            <td>{{ poll.id }}</td>
-            <td>{{ poll.title }}</td>
-            <td>{{ poll.close_date }}</td>
-            <td>{{ poll.yes }}</td>
-            <td>{{ poll.no }}</td>
-            <td>{% if poll.allow_abstention is True %}{{ poll.abstention }}{% else %}-{% endif %}</td>
-            <td>{{ poll.votes }}</td>
+            <td>{{ member.get_name }}</td>
+            <td>{{ member.email }}</td>
+            <td>{{ vote.get_choice_display }}</td>
         </tr>
         {% empty %}
-            {% trans "No polls found" %}
+            {% trans "No votes found" %}
         {% endfor %}
     </table>
 {% endblock %}

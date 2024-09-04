@@ -33,6 +33,9 @@
             {% trans "You are not allowed to participate in the poll. Please contact us via mail for further information." %}
         </p>
     {% endif %}
+    {% if perms.juntagrico_polling.can_see_poll_results %}
+        <a href="{% url 'polling:results_list'%}">Results</a>
+    {% endif%}
 {% endblock %}
 
 {% block scripts %}

@@ -1,5 +1,6 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
+from juntagrico.dao.memberdao import MemberDao
 from juntagrico_polling.entity.polling import Poll
 from juntagrico_polling.entity.polling import Vote
 from juntagrico_polling.dao.pollingdao import PollingDao
@@ -49,7 +50,7 @@ def user_allowed_to_vote(user):
 
 
 @permission_required('juntagrico_polling.can_see_poll_results')
-def results(request):
+def results_list(request):
     polls = PollingDao.all_polls_ordered()
     for thispoll in polls:
         user_votes = PollingDao.votes_for_poll(thispoll)
@@ -59,5 +60,19 @@ def results(request):
         thispoll.votes = user_votes.count()
     renderdict = {
         'polls': polls,
+    }
+    return render(request, "jp/results_list.html", renderdict)
+
+
+@permission_required('juntagrico_polling.can_see_poll_results')
+def results_poll(request, poll_id=None):
+    poll =  get_object_or_404(Poll, id=poll_id)
+    members = MemberDao.members_for_email_with_shares()
+    votes = PollingDao.votes_for_poll(poll)
+    votes_dict = {vote.user: vote for vote in votes}
+    member_votes = {member: votes_dict.get(member.user, -1) for member in members}
+    print(member_votes)
+    renderdict = {
+        'member_votes': member_votes,
     }
     return render(request, "jp/results.html", renderdict)

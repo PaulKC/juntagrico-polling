@@ -32,7 +32,7 @@ def poll_list(request):
 
 def submit_vote(request, poll_id=None, choice=None):
     allowed_to_vote = user_allowed_to_vote(request.user)
-    redirect_url = reverse('polling:list')
+    redirect_url = reverse('sub-detail')
     if allowed_to_vote and poll_id is not None and 0 <= choice <= 2:
         try:
             poll_selected = PollingDao.active_polls_ordered().get(id=poll_id)
